@@ -1,11 +1,9 @@
 package org.example.projectmanagement.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-
 @Entity
-public class OrderItems {
+public class CartItems {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,14 +13,9 @@ public class OrderItems {
     private Vehicles vehicles;
 
     private int rentalHour;
-
     private double totalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    private Order order;
-    @JsonProperty("vehicleName")
-    public String getVehicleName() {
-        return vehicles.getName();
-    }
+    private Cart cart;
 }
