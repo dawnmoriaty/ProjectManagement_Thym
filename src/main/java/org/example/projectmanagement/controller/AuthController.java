@@ -20,13 +20,13 @@ public class AuthController {
         if (error != null) {
             model.addAttribute("error", "Sai tên đăng nhập hoặc mật khẩu!");
         }
-        return "login";  // Chuyển đến trang login.html
+        return "login";
     }
 
     // Trang đăng ký
     @GetMapping("/register")
     public String showRegisterForm() {
-        return "register";  // Chuyển đến trang register.html
+        return "register";
     }
 
     // Xử lý đăng ký

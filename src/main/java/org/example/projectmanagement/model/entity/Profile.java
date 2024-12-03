@@ -25,7 +25,7 @@ public class Profile {
     private boolean active;
     @OneToOne
     @JsonIgnore
-    @JoinColumn(name = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_profile", nullable = false)
     private Users users;
 
 

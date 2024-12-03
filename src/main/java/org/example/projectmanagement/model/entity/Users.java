@@ -27,6 +27,8 @@ public class Users extends BaseEntity implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Roles> roles;
+    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
+    private Profile profile;
 // UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
