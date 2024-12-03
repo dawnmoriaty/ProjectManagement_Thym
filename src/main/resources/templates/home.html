@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Quản Lý Cho Thuê Xe</title>
+    <!-- Thêm liên kết đến Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 50px;
+        }
+        .carousel-item img {
+            max-height: 500px;
+            object-fit: cover;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Quản Lý Cho Thuê Xe</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">Trang Chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/auth/login">Đăng Nhập</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/auth/register">Đăng Ký</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Liên Hệ</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Carousel -->
+<div id="carouselExampleAutoplaying" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="https://via.placeholder.com/1200x500?text=Chào+mừng+đến+với+quản+lý+cho+thuê+xe" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Chào mừng đến với Quản Lý Cho Thuê Xe</h5>
+                <p>Thuê xe dễ dàng và tiện lợi chỉ trong vài bước.</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="https://via.placeholder.com/1200x500?text=Thuê+xe+dễ+dàng" class="d-block w-100" alt="...">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<!-- Giới thiệu về dịch vụ cho thuê xe -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>Quản Lý Cho Thuê Xe</h2>
+            <p>Chúng tôi cung cấp dịch vụ cho thuê xe với nhiều loại xe khác nhau để bạn lựa chọn. Dễ dàng đăng ký, đăng nhập và quản lý thông tin thuê xe của bạn.</p>
+            <ul>
+                <li><strong>Đăng ký tài khoản</strong>: Để thuê xe, bạn cần đăng ký tài khoản.</li>
+                <li><strong>Chọn xe phù hợp</strong>: Duyệt qua các loại xe và lựa chọn xe bạn cần thuê.</li>
+                <li><strong>Thuê xe ngay lập tức</strong>: Hoàn tất thủ tục và nhận xe trong thời gian nhanh chóng.</li>
+            </ul>
+        </div>
+        <div class="col-lg-6">
+            <h3>Với chúng tôi, việc thuê xe chưa bao giờ dễ dàng hơn thế!</h3>
+            <a href="/auth/register" class="btn btn-primary">Đăng Ký Ngay</a>
+            <a href="/auth/login" class="btn btn-secondary">Đăng Nhập</a>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-4 mt-5">
+    <div class="container text-center">
+        <p>&copy; 2024 Quản Lý Cho Thuê Xe. Tất cả quyền được bảo vệ.</p>
+    </div>
+</footer>
+
+<!-- Thêm liên kết đến Bootstrap 5 JS và Popper -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>

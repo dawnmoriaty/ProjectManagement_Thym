@@ -20,11 +20,12 @@ public class Profile {
     private String email;
     private String phone;
     private String address;
-    private String ID;
+    private String IDVN;
     private String avatar;
     private boolean active;
     @OneToOne
     @JsonIgnore
+    @JoinColumn(name = "id", insertable = false, updatable = false)
     private Users users;
 
 
