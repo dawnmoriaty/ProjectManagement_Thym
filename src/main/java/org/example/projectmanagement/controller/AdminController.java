@@ -18,9 +18,8 @@ public class AdminController {
     // Trang dashboard của admin
     @GetMapping("/dashboard")
     public String dashboard(Model model, @AuthenticationPrincipal UserPrinciple principal) {
-        // Kiểm tra người dùng có phải là ADMIN không
         if (principal.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-            return "redirect:/denied"; // Chuyển hướng đến trang từ chối nếu không phải admin
+            return "redirect:/denied";
         }
 
         // Lấy danh sách người dùng

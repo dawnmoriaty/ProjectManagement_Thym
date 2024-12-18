@@ -37,10 +37,14 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public boolean login(String username, String password) {
+    public Users login(String username, String password) {
         Users user = usersRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username không tồn tại!"));
-        return passwordEncoder.matches(password, user.getPassword());
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            return user;
+        } else {
+            throw new RuntimeException("Mật khẩu không chính xác!");
+        }
     }
 
     @Override

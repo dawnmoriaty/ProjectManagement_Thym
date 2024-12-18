@@ -21,7 +21,21 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final IUserService userService;
     private final AuthenticationManager authenticationManager;
-
+    @GetMapping("/login-success")
+    public String loginSuccess() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String role = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("");
+        return switch (role) {
+            case "ROLE_SUPER_ADMIN" -> "redirect:/super-admin/dashboard";
+            case "ROLE_ADMIN" -> "redirect:/admin/dashboard";
+            case "ROLE_EMPLOYEE" -> "redirect:/employee/home";
+            case "ROLE_CUSTOMER" -> "redirect:/customer/home";
+            default -> "redirect:/home";
+        };
+    }
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
@@ -43,21 +57,19 @@ public class AuthController {
                     .map(GrantedAuthority::getAuthority)
                     .findFirst()
                     .orElse("");
-
-            System.out.println("Role: " + role);
             return switch (role) {
                 case "ROLE_SUPER_ADMIN" -> "redirect:/super-admin/dashboard";
                 case "ROLE_ADMIN" -> "redirect:/admin/dashboard";
                 case "ROLE_EMPLOYEE" -> "redirect:/employee/home";
                 case "ROLE_CUSTOMER" -> "redirect:/customer/home";
-                default -> "redirect:/employee/home";
+                default -> "redirect:/home";
             };
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Tên đăng nhập hoặc mật khẩu không đúng");
             return "login";
         }
-
     }
+
 
     // Trang đăng ký
     @GetMapping("/register")

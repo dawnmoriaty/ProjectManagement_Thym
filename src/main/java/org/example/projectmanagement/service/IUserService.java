@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface IUserService {
      Users registerUser(RegisterRequestDTO requestDTO);
-     boolean login(String username, String password);
+     Users login(String username, String password);
      List<Users> getAllUsers();
 }
