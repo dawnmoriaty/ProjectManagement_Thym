@@ -1,43 +1,79 @@
 package org.example.projectmanagement.controller;
 
 import lombok.RequiredArgsConstructor;
+
+
+import lombok.extern.slf4j.Slf4j;
+import org.example.projectmanagement.model.dtos.request.RegisterRequestDTO;
 import org.example.projectmanagement.service.IUserService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
     private final IUserService userService;
-    // Trang đăng nhập
+    private final AuthenticationManager authenticationManager;
+
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
-            model.addAttribute("error", "Sai tên đăng nhập hoặc mật khẩu!");
+            model.addAttribute("error", "Tên đăng nhập hoặc mật khẩu không chính xác!");
         }
-        return "login";
+        return "/login";
+    }
+
+    @PostMapping("/login")
+    public String handleLoginPost(@RequestParam("userName") String username,
+                                  @RequestParam("password") String password,
+                                  Model model) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password)
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String role = authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .findFirst()
+                    .orElse("");
+
+            System.out.println("Role: " + role);
+            return switch (role) {
+                case "ROLE_SUPER_ADMIN" -> "redirect:/super-admin/dashboard";
+                case "ROLE_ADMIN" -> "redirect:/admin/dashboard";
+                case "ROLE_EMPLOYEE" -> "redirect:/employee/home";
+                case "ROLE_CUSTOMER" -> "redirect:/customer/home";
+                default -> "redirect:/employee/home";
+            };
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Tên đăng nhập hoặc mật khẩu không đúng");
+            return "login";
+        }
+
     }
 
     // Trang đăng ký
     @GetMapping("/register")
-    public String showRegisterForm() {
-        return "register";
+    public String showRegisterForm(Model model) {
+        model.addAttribute("registerRequest", new RegisterRequestDTO());
+        return "/register";
     }
 
-    // Xử lý đăng ký
     @PostMapping("/register")
-    public String register(@RequestParam String username, @RequestParam String password, Model model) {
+    public String register(@ModelAttribute("registerRequest") RegisterRequestDTO registerRequest, Model model) {
         try {
-            userService.register(username, password);  // Gọi service để đăng ký
-            return "redirect:/auth/login";  // Sau khi đăng ký thành công, chuyển hướng đến trang đăng nhập
+            userService.registerUser(registerRequest);
+            return "redirect:/auth/login?success";
         } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());  // Trả về lỗi nếu tên đăng nhập đã tồn tại
-            return "register";  // Hiển thị lại trang đăng ký
+            model.addAttribute("error", e.getMessage());
+            return "/register";
         }
     }
 }

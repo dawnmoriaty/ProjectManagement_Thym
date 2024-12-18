@@ -1,53 +1,67 @@
 package org.example.projectmanagement.config;
 
 import lombok.RequiredArgsConstructor;
-import org.example.projectmanagement.security.CustomUserDetailsService;
+import lombok.extern.slf4j.Slf4j;
+import org.example.projectmanagement.security.UserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
-    private final CustomUserDetailsService customUserDetailsService;
+
+    private final UserDetailService userDetailService;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/home/**", "/auth/login", "/auth/register").permitAll()//cho phép các trang thông dung được hiển thij
-                        .requestMatchers("/super_admin/**").hasRole("SUPER_ADMIN")
-                        .requestMatchers("/admin/**").hasRole("ADMIN")   // Chỉ người dùng có role "ADMIN" mới có quyền truy cập
-                        .requestMatchers("/customer/**").hasRole("CUSTOMER")// Chỉ người dùng có role "USER" mới có quyền truy cập
-                        .requestMatchers(("/employee/**")).hasRole("EMPLOYEE")
-                        .anyRequest().authenticated()  // Các request khác yêu cầu phải đăng nhập
+                        .requestMatchers("/", "/home/**", "/auth/login", "/auth/register").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // ADMIN truy cập admin pages
+                        .requestMatchers("/super-admin/**").hasRole("SUPER_ADMIN") // SUPER_ADMIN truy cập riêng
+                        .requestMatchers("/employee/**").hasAnyRole("EMPLOYEE") // Employee và cao hơn
+                        .requestMatchers("/customer/**").hasRole("CUSTOMER") // CUSTOMER truy cập
+                        .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
                         .loginPage("/auth/login")
                         .loginProcessingUrl("/auth/login")
                         .usernameParameter("userName")
                         .passwordParameter("password")
-                        .failureUrl("/auth/login?err"))  // Cấu hình login form
-                ;
-
+                        .defaultSuccessUrl("/home", true)
+                        .failureUrl("/auth/login?error=true")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout")
+                        .logoutSuccessUrl("/home")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .invalidSessionUrl("/auth/login?expired=true")
+                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedPage("/403"));
         return http.build();
     }
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(customUserDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
-    }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
