@@ -15,7 +15,7 @@
             <!-- Hiển thị lỗi -->
             <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-            <form action="/auth/register" method="post" th:object="${registerRequest}" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <form action="/auth/register" method="post" th:object="${user}" enctype="multipart/form-data" class="needs-validation" novalidate>
                 <!-- Username -->
                 <div class="mb-3">
                     <label for="username" class="form-label">Tên đăng nhập</label>

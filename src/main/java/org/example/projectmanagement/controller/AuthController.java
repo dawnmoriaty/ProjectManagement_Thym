@@ -1,91 +1,107 @@
 package org.example.projectmanagement.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
-
 import lombok.extern.slf4j.Slf4j;
+import org.example.projectmanagement.model.dtos.request.LoginRequestDTO;
 import org.example.projectmanagement.model.dtos.request.RegisterRequestDTO;
+import org.example.projectmanagement.service.IAuthService;
 import org.example.projectmanagement.service.IUserService;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-@Slf4j
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/auth")
+@RequiredArgsConstructor
+@Slf4j
 public class AuthController {
     private final IUserService userService;
-    private final AuthenticationManager authenticationManager;
-    @GetMapping("/login-success")
-    public String loginSuccess() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String role = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst()
-                .orElse("");
-        return switch (role) {
-            case "ROLE_SUPER_ADMIN" -> "redirect:/super-admin/dashboard";
-            case "ROLE_ADMIN" -> "redirect:/admin/dashboard";
-            case "ROLE_EMPLOYEE" -> "redirect:/employee/home";
-            case "ROLE_CUSTOMER" -> "redirect:/customer/home";
-            default -> "redirect:/home";
-        };
-    }
+    private final IAuthService authService;
+
+    // Trang login với model
     @GetMapping("/login")
-    public String login(@RequestParam(value = "error", required = false) String error, Model model) {
-        if (error != null) {
-            model.addAttribute("error", "Tên đăng nhập hoặc mật khẩu không chính xác!");
-        }
+    public String loginPage(Model model) {
+        model.addAttribute("loginRequest", new LoginRequestDTO());
         return "/login";
     }
 
+    // Xử lý login
     @PostMapping("/login")
-    public String handleLoginPost(@RequestParam("userName") String username,
-                                  @RequestParam("password") String password,
-                                  Model model) {
+    public String login(
+            @Valid @ModelAttribute("loginRequest") LoginRequestDTO loginDTO,
+            BindingResult bindingResult,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (bindingResult.hasErrors()) {
+            return "/login";
+        }
+
         try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
+            boolean isAuthenticated = authService.authenticate(
+                    loginDTO.getUsername(),
+                    loginDTO.getPassword()
             );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String role = authentication.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .findFirst()
-                    .orElse("");
-            return switch (role) {
-                case "ROLE_SUPER_ADMIN" -> "redirect:/super-admin/dashboard";
-                case "ROLE_ADMIN" -> "redirect:/admin/dashboard";
-                case "ROLE_EMPLOYEE" -> "redirect:/employee/home";
-                case "ROLE_CUSTOMER" -> "redirect:/customer/home";
-                default -> "redirect:/home";
-            };
+            if (isAuthenticated) {
+                Authentication authentication =
+                        SecurityContextHolder.getContext().getAuthentication();
+                String redirectUrl = authService.determineRedirectUrl(authentication);
+
+                return "redirect:" + redirectUrl;
+            } else {
+                redirectAttributes.addFlashAttribute(
+                        "error",
+                        "Tên đăng nhập hoặc mật khẩu không chính xác"
+                );
+                return "redirect:/auth/login";
+            }
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Tên đăng nhập hoặc mật khẩu không đúng");
-            return "login";
+            log.error("Lỗi đăng nhập", e);
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "Có lỗi xảy ra trong quá trình đăng nhập"
+            );
+            return "redirect:/auth/login";
         }
     }
-
-
-    // Trang đăng ký
     @GetMapping("/register")
-    public String showRegisterForm(Model model) {
-        model.addAttribute("registerRequest", new RegisterRequestDTO());
+    public String registerPage(Model model) {
+        model.addAttribute("user", new RegisterRequestDTO());
         return "/register";
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute("registerRequest") RegisterRequestDTO registerRequest, Model model) {
-        try {
-            userService.registerUser(registerRequest);
-            return "redirect:/auth/login?success";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
+    public String register(
+            @Valid @ModelAttribute("user") RegisterRequestDTO dto,
+            BindingResult result,
+            RedirectAttributes redirect
+    ) {
+        if (result.hasErrors()) {
             return "/register";
         }
+        try {
+            userService.registerUser(dto);
+            redirect.addFlashAttribute("success", "Đăng ký thành công!");
+            return "redirect:/auth/login";
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+            return "redirect:/auth/register";
+        }
+    }
+
+    // Logout endpoint
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        SecurityContextHolder.clearContext();
+        return "redirect:/auth/login?logout=true";
     }
 }

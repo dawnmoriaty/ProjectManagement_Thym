@@ -1,23 +1,28 @@
 package org.example.projectmanagement.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.projectmanagement.enums.RoleUserName;
 import org.example.projectmanagement.model.dtos.request.RegisterRequestDTO;
+import org.example.projectmanagement.model.entity.Roles;
 import org.example.projectmanagement.model.entity.Users;
+import org.example.projectmanagement.repository.IRolesRepository;
 import org.example.projectmanagement.repository.IUsersRepository;
 import org.example.projectmanagement.service.IFileService;
 import org.example.projectmanagement.service.IUserService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements IUserService {
     private final IUsersRepository usersRepository;
     private final IFileService fileService;
     private final PasswordEncoder passwordEncoder;
+    private final IRolesRepository rolesRepository;
 
     @Override
     public Users registerUser(RegisterRequestDTO requestDTO) {
@@ -35,22 +40,39 @@ public class UserServiceImpl implements IUserService {
                 .build();
         return usersRepository.save(users);
     }
-
     @Override
-    public Users login(String username, String password) {
-        Users user = usersRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username không tồn tại!"));
-        if (passwordEncoder.matches(password, user.getPassword())) {
-            return user;
-        } else {
-            throw new RuntimeException("Mật khẩu không chính xác!");
-        }
+    public Users getUserById(Long id) {
+        return usersRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Người dùng không tồn tại!"));
     }
-
     @Override
     public List<Users> getAllUsers() {
         return usersRepository.findAll();
     }
-
-
+    @Override
+    public Users updateUser(Long id, Users user) {
+        Users existingUser  = getUserById(id);
+        existingUser.setUsername(user.getUsername());
+        existingUser.setFullName(user.getFullName());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setPhone(user.getPhone());
+        existingUser.setAddress(user.getAddress());
+        existingUser.setIDVN(user.getIDVN());
+        existingUser.setAvatar(user.getAvatar());
+        existingUser.setActive(user.isActive());
+        return usersRepository.save(existingUser );
+    }
+    @Override
+    public void deleteUser(Long id) {
+        Users user = getUserById(id);
+        usersRepository.delete(user);
+    }
+    @Override
+    public void addRoleToUser(Long id, RoleUserName roleUserName) {
+        Users user = getUserById(id);
+        Roles role = (Roles) rolesRepository.findByRoleName(roleUserName)
+                .orElseThrow(() -> new RuntimeException("Vai trò không tồn tại!"));
+        user.getRoles().add(role);
+        usersRepository.save(user);
+    }
 }
