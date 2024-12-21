@@ -1,5 +1,4 @@
 package org.example.projectmanagement.service.impl;
-
 import lombok.RequiredArgsConstructor;
 import org.example.projectmanagement.model.dtos.request.VehicleRequestDTO;
 import org.example.projectmanagement.model.entity.Vehicles;
@@ -7,7 +6,6 @@ import org.example.projectmanagement.repository.IVehiclesRepository;
 import org.example.projectmanagement.service.IFileService;
 import org.example.projectmanagement.service.IVehiclesService;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -15,17 +13,14 @@ import java.util.Optional;
 public class VehiclesServiceImpl implements IVehiclesService {
     private final IVehiclesRepository vehiclesRepository;
     private final IFileService fileService;
-
     @Override
     public List<Vehicles> getAllVehicles() {
         return vehiclesRepository.findAll();
     }
-
     @Override
     public Optional<Vehicles> getVehicleById(Long id) {
         return vehiclesRepository.findById(id);
     }
-
     @Override
     public Vehicles createVehicle(VehicleRequestDTO vehicleRequestDTO) {
         String image = fileService.uploadImage(vehicleRequestDTO.getImageVehicle());
@@ -41,7 +36,6 @@ public class VehiclesServiceImpl implements IVehiclesService {
 
         return vehiclesRepository.save(vehicles);
     }
-
     @Override
     public Vehicles updateVehicle(Long id, VehicleRequestDTO vehicleRequestDTO) {
         Vehicles existingVehicle = vehiclesRepository.findById(id)
@@ -58,8 +52,6 @@ public class VehiclesServiceImpl implements IVehiclesService {
         existingVehicle.setImageVehicle(image);
         return vehiclesRepository.save(existingVehicle);
     }
-
-
     @Override
     public void deleteVehicle(Long id) {
         vehiclesRepository.deleteById(id);
