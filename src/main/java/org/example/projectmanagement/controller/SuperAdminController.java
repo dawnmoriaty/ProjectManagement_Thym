@@ -23,31 +23,26 @@ public class SuperAdminController {
     private final IUserService userService;
     @GetMapping("/dashboard")
     public String dashboard() {
-        return "dashboard-admin";
+        return "dashboard-super-admin";
     }
-
-    // Hiển thị danh sách người dùng
     @GetMapping("/users")
     public String listUsers(Model model) {
         List<Users> users = userService.getAllUsers();
         model.addAttribute("users", users);
-        return "super-admin-user-list"; // Tên view để hiển thị danh sách người dùng
+        return "super-admin-user-list";
     }
 
-    // Hiển thị trang đăng ký người dùng mới
     @GetMapping("/users/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new RegisterRequestDTO());
-        return "register-user"; // Tên view để hiển thị form đăng ký
+        return "register";
     }
-
-    // Xử lý đăng ký người dùng mới
     @PostMapping("/users/register")
     public String registerUser (@Valid @ModelAttribute("user") RegisterRequestDTO requestDTO,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "register-user"; // Trả về form nếu có lỗi
+            return "register";
         }
         try {
             userService.registerUser (requestDTO);
@@ -55,36 +50,10 @@ public class SuperAdminController {
             return "redirect:/super-admin/users";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/super-admin/users/register";
+            return "register";
         }
     }
 
-    // Hiển thị trang chỉnh sửa người dùng
-    @GetMapping("/users/edit/{id}")
-    public String showEditUserForm(@PathVariable Long id, Model model) {
-        Users user = userService.getUserById(id);
-        model.addAttribute("user", user);
-        return "edit-user"; // Tên view để hiển thị form chỉnh sửa
-    }
-
-    // Xử lý chỉnh sửa người dùng
-    @PostMapping("/users/edit/{id}")
-    public String editUser (@PathVariable Long id, @Valid @ModelAttribute("user") Users user,
-                            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "edit-user"; // Trả về form nếu có lỗi
-        }
-        try {
-            userService.updateUser (id, user);
-            redirectAttributes.addFlashAttribute("success", "Cập nhật người dùng thành công!");
-            return "redirect:/super-admin/users";
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/super-admin/users/edit/" + id;
-        }
-    }
-
-    // Xử lý xóa người dùng
     @GetMapping("/users/delete/{id}")
     public String deleteUser (@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
@@ -95,8 +64,6 @@ public class SuperAdminController {
         }
         return "redirect:/super-admin/users";
     }
-
-    // Thêm vai trò cho người dùng
     @PostMapping("/users/{userId}/roles")
     public String addRoleToUser (@PathVariable Long userId, @RequestParam RoleUserName roleName,
                                  RedirectAttributes redirectAttributes) {

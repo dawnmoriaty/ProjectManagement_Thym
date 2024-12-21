@@ -11,10 +11,8 @@ public class CartItems {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Vehicles vehicles;
-
     private int rentalHour;
     private double totalPrice;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Cart cart;

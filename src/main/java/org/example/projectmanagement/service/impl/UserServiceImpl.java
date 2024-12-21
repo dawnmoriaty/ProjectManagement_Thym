@@ -50,19 +50,6 @@ public class UserServiceImpl implements IUserService {
         return usersRepository.findAll();
     }
     @Override
-    public Users updateUser(Long id, Users user) {
-        Users existingUser  = getUserById(id);
-        existingUser.setUsername(user.getUsername());
-        existingUser.setFullName(user.getFullName());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setPhone(user.getPhone());
-        existingUser.setAddress(user.getAddress());
-        existingUser.setIDVN(user.getIDVN());
-        existingUser.setAvatar(user.getAvatar());
-        existingUser.setActive(user.isActive());
-        return usersRepository.save(existingUser );
-    }
-    @Override
     public void deleteUser(Long id) {
         Users user = getUserById(id);
         usersRepository.delete(user);

@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Home</title>
+    <title>Admin Dashboard</title>
 </head>
 <body>
-<h1>Welcome, super-admin!</h1>
-<p>This is the home page for admin.</p>
+<h1>Welcome to Admin Dashboard</h1>
+<nav>
+    <a th:href="@{/admin/categories}">Manage Categories</a>
+    <a th:href="@{/admin/vehicles}">Manage Vehicles</a>
+</nav>
 </body>
 </html>

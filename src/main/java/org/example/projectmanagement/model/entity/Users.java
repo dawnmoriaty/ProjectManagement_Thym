@@ -30,6 +30,4 @@ public class Users extends BaseEntity{
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Roles> roles;
-
-
 }

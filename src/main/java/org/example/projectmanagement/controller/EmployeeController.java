@@ -10,6 +10,6 @@ public class EmployeeController {
 
     @GetMapping("/home")
     public String employeeHome() {
-        return "customer-home"; // Trả về view employee-home.html
+        return "customer-home";
     }
 }

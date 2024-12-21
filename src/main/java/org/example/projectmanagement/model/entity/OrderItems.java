@@ -9,15 +9,11 @@ public class OrderItems {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Vehicles vehicles;
-
     private int rentalHour;
-
     private double totalPrice;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Order order;

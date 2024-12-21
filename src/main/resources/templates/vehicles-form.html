@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${vehicles.id == null ? 'Thêm Xe Mới' : 'Chỉnh Sửa Xe'}"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <!-- Tiêu đề động -->
+    <h1 class="text-center mb-4" th:text="${vehicles.id == null ? 'Thêm Xe Mới' : 'Chỉnh Sửa Xe'}"></h1>
+
+    <!-- Form thêm hoặc chỉnh sửa -->
+    <form th:action="${vehicles.id == null ? '/admin/vehicles' : '/admin/vehicles/update/' + vehicles.id}" method="post" class="needs-validation" enctype="multipart/form-data" novalidate>
+        <!-- Trường nhập Tên Xe -->
+        <div class="mb-3">
+            <label for="name" class="form-label">Tên Xe</label>
+            <input type="text" class="form-control" id="name" name="name"
+                   th:value="${vehicles.name}" placeholder="Nhập tên xe" required>
+            <div class="invalid-feedback">Vui lòng nhập tên xe.</div>
+        </div>
+
+        <!-- Trường nhập Biển Số -->
+        <div class="mb-3">
+            <label for="licensePlate" class="form-label">Biển Số</label>
+            <input type="text" class="form-control" id="licensePlate" name="licensePlate"
+                   th:value="${vehicles.licensePlate}" placeholder="Nhập biển số xe" required>
+            <div class="invalid-feedback">Vui lòng nhập biển số xe.</div>
+        </div>
+
+        <!-- Trường nhập Nhà Sản Xuất -->
+        <div class="mb-3">
+            <label for="manufacturer" class="form-label">Nhà Sản Xuất</label>
+            <input type="text" class="form-control" id="manufacturer" name="manufacturer"
+                   th:value="${vehicles.manufacturer}" placeholder="Nhập nhà sản xuất" required>
+            <div class="invalid-feedback">Vui lòng nhập nhà sản xuất.</div>
+        </div>
+
+        <!-- Trường nhập Mẫu Xe -->
+        <div class="mb-3">
+            <label for="model" class="form-label">Mẫu Xe</label>
+            <input type="text" class="form-control" id="model" name="model"
+                   th:value="${vehicles.model}" placeholder="Nhập mẫu xe" required>
+            <div class="invalid-feedback">Vui lòng nhập mẫu xe.</div>
+        </div>
+
+        <!-- Trường tải lên Hình Ảnh Xe -->
+        <div class="mb-3">
+            <label for="imageVehicle" class="form-label">Hình Ảnh Xe</label>
+            <input type="file" class="form-control" id="imageVehicle" name="imageVehicle" accept="image/*">
+            <div class="form-text">Tải lên hình ảnh của xe (định dạng: JPG, PNG, JPEG).</div>
+        </div>
+
+        <!-- Trường nhập Mô Tả -->
+        <div class="mb-3">
+            <label for="description" class="form-label">Mô Tả</label>
+            <textarea class="form-control" id="description" name="description"
+                      rows="3" th:text="${vehicles.description}" placeholder="Nhập mô tả"></textarea>
+        </div>
+
+        <!-- Danh mục -->
+        <div class="mb-3">
+            <label for="category" class="form-label">Danh Mục</label>
+            <select class="form-select" id="category" name="categoryId" required>
+                <option th:each="category : ${categories}"
+                        th:value="${category.categoryId}"
+                        th:text="${category.nameCategory}"
+                        th:selected="${category.categoryId == vehicles.categories?.categoryId}">
+                </option>
+            </select>
+            <div class="invalid-feedback">Vui lòng chọn danh mục.</div>
+        </div>
+
+        <!-- Nút hành động -->
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a th:href="@{/admin/vehicles}" class="btn btn-secondary">Hủy</a>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // JavaScript để kích hoạt Bootstrap validation
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+</body>
+</html>

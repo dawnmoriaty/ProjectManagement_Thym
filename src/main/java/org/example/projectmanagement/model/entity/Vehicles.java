@@ -2,17 +2,15 @@ package org.example.projectmanagement.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.example.projectmanagement.enums.Color;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
+@Getter
+@Setter
 public class Vehicles {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +19,6 @@ public class Vehicles {
     private String licensePlate;
     private String manufacturer;
     private String model;
-    private Color color;
     private String imageVehicle;
     @Lob
     @Column(columnDefinition = "TEXT")
