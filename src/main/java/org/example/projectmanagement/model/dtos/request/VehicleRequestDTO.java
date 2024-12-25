@@ -1,6 +1,5 @@
 package org.example.projectmanagement.model.dtos.request;
 import lombok.*;
-import org.example.projectmanagement.model.entity.Categories;
 import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
@@ -15,5 +14,5 @@ public class VehicleRequestDTO {
     private String model;
     private MultipartFile imageVehicle;
     private String description;
-    private Categories categories;
+    private Long categoryID;
 }

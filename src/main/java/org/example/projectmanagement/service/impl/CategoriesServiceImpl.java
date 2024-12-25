@@ -22,8 +22,11 @@ public class CategoriesServiceImpl implements ICategoriesService {
         return categoriesRepository.findAll();
     }
     @Override
-    public Optional<Categories> getCategoryById(Long id) {
-        return categoriesRepository.findById(id);
+    public Categories getCategoryById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Category ID must not be null");
+        }
+        return categoriesRepository.findById(id).orElse(null);
     }
     @Override
     public Categories updateCategory(Long id, Categories categoryDetails) {

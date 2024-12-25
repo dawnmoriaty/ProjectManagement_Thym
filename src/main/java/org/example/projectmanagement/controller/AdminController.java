@@ -3,6 +3,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.projectmanagement.model.dtos.request.VehicleRequestDTO;
 import org.example.projectmanagement.model.entity.Categories;
 import org.example.projectmanagement.model.entity.Vehicles;
+import org.example.projectmanagement.repository.ICategoriesRepository;
 import org.example.projectmanagement.service.ICategoriesService;
 import org.example.projectmanagement.service.IVehiclesService;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ public class AdminController {
 
     private final ICategoriesService categoriesService;
     private final IVehiclesService vehiclesService;
+    private final ICategoriesRepository categoriesRepository;
 
     // =============================DASHBOARD==================================
     @GetMapping("/dashboard")
@@ -46,8 +48,7 @@ public class AdminController {
 
     @GetMapping("/categories/edit/{id}")
     public String editCategoryForm(@PathVariable Long id, Model model) {
-        Categories category = categoriesService.getCategoryById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid category Id:" + id));
+        Categories category = categoriesService.getCategoryById(id);
         model.addAttribute("category", category);
         return "category-form"; // Tên view cho form chỉnh sửa danh mục
     }
@@ -68,30 +69,32 @@ public class AdminController {
     public String listVehicles(Model model) {
         List<Vehicles> vehiclesList = vehiclesService.getAllVehicles();
         model.addAttribute("vehicles", vehiclesList);
-        model.addAttribute("categories", categoriesService.getAllCategories());
+        List<Categories> categoriesList = categoriesRepository.findAll();
+        model.addAttribute("categories", categoriesList);
         return "vehicles-list";
     }
 
     @GetMapping("/vehicles/new")
     public String createVehicleForm(Model model) {
-        model.addAttribute("vehicles", new Vehicles());
+        model.addAttribute("vehicles", new VehicleRequestDTO());
         model.addAttribute("categories", categoriesService.getAllCategories()); // Thêm danh sách danh mục cho dropdown
         return "vehicles-form"; // Tên view cho form tạo mới xe
     }
 
     @PostMapping("/vehicles")
-    public String createVehicle(@ModelAttribute VehicleRequestDTO vehicleRequestDTO) {
-        vehiclesService.createVehicle(vehicleRequestDTO);
+    public String createVehicle(@ModelAttribute VehicleRequestDTO vehicleRequestDTO,Model model) {
+        Vehicles vehicles = vehiclesService.createVehicle(vehicleRequestDTO);
+        model.addAttribute("vehicles", vehicles);
         return "redirect:/admin/vehicles";
     }
 
     @GetMapping("/vehicles/edit/{id}")
     public String editVehicleForm(@PathVariable Long id, Model model) {
-        Vehicles vehicle = vehiclesService.getVehicleById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid vehicle Id:" + id));
+        Vehicles vehicle = vehiclesService.getVehicleById(id);
         model.addAttribute("vehicles", vehicle);
-        model.addAttribute("categories", categoriesService.getAllCategories()); // Thêm danh sách danh mục cho dropdown
-        return "vehicles-form";
+        List<Categories> categoriesList = categoriesRepository.findAll();
+        model.addAttribute("categories", categoriesList); // Thêm danh sách danh mục cho dropdown
+        return "vehicle-update";
     }
 
     @PostMapping("/vehicles/update/{id}")

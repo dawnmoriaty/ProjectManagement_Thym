@@ -8,51 +8,43 @@
 <body class="container mt-4">
 <h1 class="mb-4">Danh Sách Xe</h1>
 
-<!-- Kiểm tra danh sách có dữ liệu hay không -->
-<div th:if="${vehicles.size() > 0}">
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-        <tr>
-            <th>ID</th>
-            <th>Tên Xe</th>
-            <th>Biển Số</th>
-            <th>Hãng Sản Xuất</th>
-            <th>Mô Hình</th>
-            <th>Hình Ảnh</th>
-            <th>Mô Tả</th>
-            <th>Loại Xe</th>
-            <th>Thao Tác</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Lặp qua danh sách vehicles -->
-        <tr th:each="vehicle : ${vehicles}">
-            <td th:text="${vehicle.id}">ID</td>
-            <td th:text="${vehicle.name}">Tên Xe</td>
-            <td th:text="${vehicle.licensePlate}">Biển Số</td>
-            <td th:text="${vehicle.manufacturer}">Hãng Sản Xuất</td>
-            <td th:text="${vehicle.model}">Mô Hình</td>
-            <td>
-                <!-- Hiển thị hình ảnh -->
-                <img th:src="@{${vehicle.imageVehicle}}" alt="Hình Xe" class="img-thumbnail" style="width: 100px; height: auto;">
-            </td>
-            <td th:text="${vehicle.description}">Mô Tả</td>
-            <td th:text="${vehicle.categories != null ? vehicle.categories.nameCategory : 'Không rõ'}">Loại Xe</td>
-
-            <td>
-                <a th:href="@{/admin/vehicles/edit/{id}(id=${vehicle.id})}" class="btn btn-warning btn-sm">Chỉnh Sửa</a>
-                <a th:href="@{/admin/vehicles/delete/{id}(id=${vehicle.id})}" class="btn btn-danger btn-sm"
-                   onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- Thông báo khi danh sách rỗng -->
-<div th:if="${vehicles.size() == 0}" class="alert alert-warning">
-    <p>Không có xe nào trong danh sách.</p>
-</div>
+<!-- Bảng danh sách xe -->
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+    <tr>
+        <th>ID</th>
+        <th>Tên Xe</th>
+        <th>Biển Số</th>
+        <th>Hãng Sản Xuất</th>
+        <th>Mô Hình</th>
+        <th>Hình Ảnh</th>
+        <th>Mô Tả</th>
+        <th>Loại Xe</th>
+        <th>Thao Tác</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Lặp qua danh sách vehicles -->
+    <tr th:each="vehicle : ${vehicles}">
+        <td th:text="${vehicle.id}">ID</td>
+        <td th:text="${vehicle.name}">Tên Xe</td>
+        <td th:text="${vehicle.licensePlate}">Biển Số</td>
+        <td th:text="${vehicle.manufacturer}">Hãng Sản Xuất</td>
+        <td th:text="${vehicle.model}">Mô Hình</td>
+        <td>
+            <!-- Hiển thị hình ảnh -->
+            <img th:src="@{${vehicle.imageVehicle}}" alt="Hình Xe" class="img-thumbnail" style="width: 100px; height: auto;">
+        </td>
+        <td th:text="${vehicle.description}">Mô Tả</td>
+        <td th:text="${vehicle.categories.nameCategory}">Loại Xe</td>
+        <td>
+            <a th:href="@{/admin/vehicles/edit/{id}(id=${vehicle.id})}" class="btn btn-warning btn-sm">Chỉnh Sửa</a>
+            <a th:href="@{/admin/vehicles/delete/{id}(id=${vehicle.id})}" class="btn btn-danger btn-sm"
+               onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 <!-- Nút thêm mới -->
 <a href="/admin/vehicles/new" class="btn btn-primary mt-3">Thêm Xe Mới</a>
