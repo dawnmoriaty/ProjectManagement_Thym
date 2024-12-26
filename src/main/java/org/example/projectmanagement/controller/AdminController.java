@@ -2,9 +2,12 @@ package org.example.projectmanagement.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.projectmanagement.model.dtos.request.VehicleRequestDTO;
 import org.example.projectmanagement.model.entity.Categories;
+import org.example.projectmanagement.model.entity.Rentals;
 import org.example.projectmanagement.model.entity.Vehicles;
 import org.example.projectmanagement.repository.ICategoriesRepository;
+import org.example.projectmanagement.repository.IRentalsRepository;
 import org.example.projectmanagement.service.ICategoriesService;
+import org.example.projectmanagement.service.IRentalsService;
 import org.example.projectmanagement.service.IVehiclesService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +22,7 @@ public class AdminController {
     private final ICategoriesService categoriesService;
     private final IVehiclesService vehiclesService;
     private final ICategoriesRepository categoriesRepository;
+    private final IRentalsService rentalsService;
 
     // =============================DASHBOARD==================================
     @GetMapping("/dashboard")
@@ -71,6 +75,20 @@ public class AdminController {
         model.addAttribute("vehicles", vehiclesList);
         List<Categories> categoriesList = categoriesRepository.findAll();
         model.addAttribute("categories", categoriesList);
+        List<Rentals> rentals = rentalsService.getAllRentals();
+        model.addAttribute("rentals", rentals);
+        long availableVehiclesCount = vehiclesList.stream()
+                .filter(v -> "AVAILABLE".equals(v.getStatus()))
+                .count();
+        model.addAttribute("availableVehiclesCount", availableVehiclesCount);
+
+        long totalExpectedRevenue = vehiclesList.stream()
+                .mapToLong(v -> v.getPrice().longValue())
+                .sum();
+        model.addAttribute("totalExpectedRevenue", totalExpectedRevenue);
+
+        model.addAttribute("totalExpectedRevenue", totalExpectedRevenue);
+
         return "vehicles-list";
     }
 

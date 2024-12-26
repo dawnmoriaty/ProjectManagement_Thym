@@ -32,7 +32,9 @@ public class VehiclesServiceImpl implements IVehiclesService {
                 .licensePlate(vehicleRequestDTO.getLicensePlate())
                 .description(vehicleRequestDTO.getDescription())
                 .manufacturer(vehicleRequestDTO.getManufacturer())
+                .status(vehicleRequestDTO.getStatus())
                 .model(vehicleRequestDTO.getModel())
+                .price(vehicleRequestDTO.getPrice())
                 .categories(categories)
                 .imageVehicle(image)
                 .build();
@@ -51,6 +53,8 @@ public class VehiclesServiceImpl implements IVehiclesService {
         existingVehicle.setDescription(vehicleRequestDTO.getDescription());
         existingVehicle.setManufacturer(vehicleRequestDTO.getManufacturer());
         existingVehicle.setModel(vehicleRequestDTO.getModel());
+        existingVehicle.setStatus(vehicleRequestDTO.getStatus());
+        existingVehicle.setPrice(vehicleRequestDTO.getPrice());
         existingVehicle.setCategories(categories);
         existingVehicle.setImageVehicle(image);
         return vehiclesRepository.save(existingVehicle);

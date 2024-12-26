@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +23,8 @@ public class Vehicles {
     private String manufacturer;
     private String model;
     private String imageVehicle;
+    private Double price;
+    private String status;
     @Lob
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -27,4 +32,6 @@ public class Vehicles {
     @JsonIgnore
     @JoinColumn(name = "category_id",referencedColumnName = "category_id")
     private Categories categories;
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Rentals> rentalsList = new ArrayList<>();
 }

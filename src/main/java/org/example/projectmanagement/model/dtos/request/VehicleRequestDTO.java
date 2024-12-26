@@ -14,5 +14,7 @@ public class VehicleRequestDTO {
     private String model;
     private MultipartFile imageVehicle;
     private String description;
+    private String status;
+    private Double price;
     private Long categoryID;
 }

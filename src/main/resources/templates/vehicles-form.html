@@ -1,80 +1,153 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thêm Xe Mới</title>
+    <title>Quản Lý Xe - Thêm Xe Mới</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+        .form-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Thêm Xe Mới</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 form-container">
+            <h2 class="text-center mb-4 text-primary">
+                <i class="bi bi-car-front me-2"></i>Thêm Xe Mới
+            </h2>
 
-    <form th:action="@{/admin/vehicles}" method="post" class="needs-validation" enctype="multipart/form-data" novalidate>
-        <!-- Trường nhập Tên Xe -->
-        <div class="mb-3">
-            <label for="name" class="form-label">Tên Xe</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Nhập tên xe" required>
-            <div class="invalid-feedback">Vui lòng nhập tên xe.</div>
-        </div>
+            <form th:action="@{/admin/vehicles}" method="post"
+                  class="needs-validation"
+                  enctype="multipart/form-data"
+                  novalidate>
 
-        <!-- Trường nhập Biển Số -->
-        <div class="mb-3">
-            <label for="licensePlate" class="form-label">Biển Số</label>
-            <input type="text" class="form-control" id="licensePlate" name="licensePlate" placeholder="Nhập biển số xe" required>
-            <div class="invalid-feedback">Vui lòng nhập biển số xe.</div>
-        </div>
+                <div class="row">
+                    <!-- Cột trái -->
+                    <div class="col-md-6">
+                        <!-- Tên Xe -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Tên Xe</label>
+                            <input type="text" class="form-control" id="name"
+                                   name="name" placeholder="Nhập tên xe" required>
+                            <div class="invalid-feedback">Vui lòng nhập tên xe</div>
+                        </div>
 
-        <!-- Trường nhập Nhà Sản Xuất -->
-        <div class="mb-3">
-            <label for="manufacturer" class="form-label">Nhà Sản Xuất</label>
-            <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="Nhập nhà sản xuất" required>
-            <div class="invalid-feedback">Vui lòng nhập nhà sản xuất.</div>
-        </div>
+                        <!-- Biển Số -->
+                        <div class="mb-3">
+                            <label for="licensePlate" class="form-label">Biển Số</label>
+                            <input type="text" class="form-control" id="licensePlate"
+                                   name="licensePlate" placeholder="Nhập biển số" required>
+                            <div class="invalid-feedback">Vui lòng nhập biển số</div>
+                        </div>
 
-        <!-- Trường nhập Mẫu Xe -->
-        <div class="mb-3">
-            <label for="model" class="form-label">Mẫu Xe</label>
-            <input type="text" class="form-control" id="model" name="model" placeholder="Nhập mẫu xe" required>
-            <div class="invalid-feedback">Vui lòng nhập mẫu xe.</div>
-        </div>
+                        <!-- Nhà Sản Xuất -->
+                        <div class="mb-3">
+                            <label for="manufacturer" class="form-label">Nhà Sản Xuất</label>
+                            <input type="text" class="form-control" id="manufacturer"
+                                   name="manufacturer" placeholder="Nhập nhà sản xuất" required>
+                            <div class="invalid-feedback">Vui lòng nhập nhà sản xuất</div>
+                        </div>
 
-        <!-- Trường tải lên Hình Ảnh Xe -->
-        <div class="mb-3">
-            <label for="imageVehicle" class="form-label">Hình Ảnh Xe</label>
-            <input type="file" class="form-control" id="imageVehicle" name="imageVehicle" accept="image/*" required>
-            <div class="form-text">Tải lên hình ảnh của xe (định dạng: JPG, PNG, JPEG).</div>
-            <div class="invalid-feedback">Vui lòng tải lên hình ảnh.</div>
-        </div>
+                        <!-- Mẫu Xe -->
+                        <div class="mb-3">
+                            <label for="model" class="form-label">Mẫu Xe</label>
+                            <input type="text" class="form-control" id="model"
+                                   name="model" placeholder="Nhập mẫu xe" required>
+                            <div class="invalid-feedback">Vui lòng nhập mẫu xe</div>
+                        </div>
+                    </div>
 
-        <!-- Trường nhập Mô Tả -->
-        <div class="mb-3">
-            <label for="description" class="form-label">Mô Tả</label>
-            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Nhập mô tả"></textarea>
-        </div>
+                    <!-- Cột phải -->
+                    <div class="col-md-6">
+                        <!-- Giá Thuê -->
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Giá Thuê (VND/Ngày)</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="price"
+                                       name="price" placeholder="Giá thuê"
+                                       min="0" step="1000" required>
+                                <span class="input-group-text">VND</span>
+                            </div>
+                            <div class="form-text text-muted">Nhập giá thuê theo ngày</div>
+                        </div>
 
-        <!-- Danh mục -->
-        <div class="mb-3">
-            <label for="categoryId" class="form-label">Danh Mục</label>
-            <select id="categoryId" name="categoryID" class="form-control" required>
-                <option value="" disabled selected>Chọn danh mục</option>
-                <th:block th:each="category : ${categories}">
-                    <option th:value="${category.categoryId}" th:text="${category.nameCategory}"></option>
-                </th:block>
-            </select>
-            <div class="invalid-feedback">Vui lòng chọn danh mục.</div>
-        </div>
+                        <!-- Trạng Thái -->
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Trạng Thái</label>
+                            <select id="status" name="status" class="form-select" required>
+                                <option value="">Chọn trạng thái</option>
+                                <option value="AVAILABLE">Sẵn sàng</option>
+                                <option value="RENTED">Đang thuê</option>
+                                <option value="MAINTENANCE">Bảo dưỡng</option>
+                                <option value="UNAVAILABLE">Không khả dụng</option>
+                            </select>
+                            <div class="invalid-feedback">Chọn trạng thái xe</div>
+                        </div>
 
-        <!-- Nút hành động -->
-        <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-primary">Lưu</button>
-            <a th:href="@{/admin/vehicles}" class="btn btn-secondary">Hủy</a>
+                        <!-- Danh Mục -->
+                        <div class="mb-3">
+                            <label for="categoryId" class="form-label">Danh Mục</label>
+                            <select id="categoryId" name="categoryID" class="form-select" required>
+                                <option value="">Chọn danh mục</option>
+                                <th:block th:each="category : ${categories}">
+                                    <option th:value="${category.categoryId}"
+                                            th:text="${category.nameCategory}"></option>
+                                </th:block>
+                            </select>
+                            <div class="invalid-feedback">Chọn danh mục xe</div>
+                        </div>
+
+                        <!-- Hình Ảnh -->
+                        <div class="mb-3">
+                            <label for="imageVehicle" class="form-label">Hình Ảnh Xe</label>
+                            <input type="file" class="form-control" id="imageVehicle"
+                                   name="imageVehicle" accept="image/*" required>
+                            <div class="form-text">Tải hình ảnh (JPG, PNG, JPEG)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mô Tả -->
+                <div class="mb-3">
+                    <label for="description" class="form-label">Mô Tả Chi Tiết</label>
+                    <textarea class="form-control" id="description"
+                              name="description" rows="3"
+                              placeholder="Nhập mô tả chi tiết về xe"></textarea>
+                </div>
+
+                <!-- Nút Hành Động -->
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-2"></i>Lưu Xe
+                    </button>
+                    <a th:href="@{/admin/vehicles}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-2"></i>Hủy
+                    </a>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
+
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+
 <script>
-    // JavaScript để kích hoạt Bootstrap validation
+    // Kích hoạt Bootstrap Validation
     (function () {
         'use strict';
         var forms = document.querySelectorAll('.needs-validation');

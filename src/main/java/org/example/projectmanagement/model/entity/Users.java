@@ -2,6 +2,9 @@ package org.example.projectmanagement.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -30,4 +33,6 @@ public class Users extends BaseEntity{
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Roles> roles;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Rentals> rentalsList = new ArrayList<>();
 }
