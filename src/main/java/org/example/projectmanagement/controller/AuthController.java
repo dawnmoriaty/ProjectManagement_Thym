@@ -1,11 +1,14 @@
 package org.example.projectmanagement.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.projectmanagement.model.dtos.request.LoginRequestDTO;
 import org.example.projectmanagement.model.dtos.request.RegisterRequestDTO;
+import org.example.projectmanagement.model.entity.Users;
+import org.example.projectmanagement.repository.IUsersRepository;
 import org.example.projectmanagement.service.IAuthService;
 import org.example.projectmanagement.service.IUserService;
 import org.springframework.security.core.Authentication;
@@ -26,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AuthController {
     private final IUserService userService;
     private final IAuthService authService;
+    private final IUsersRepository usersRepository;
 
     // Trang login với model
     @GetMapping("/login")
@@ -40,7 +44,8 @@ public class AuthController {
             @Valid @ModelAttribute("loginRequest") LoginRequestDTO loginDTO,
             BindingResult bindingResult,
             HttpServletRequest request,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            HttpSession session
     ) {
         if (bindingResult.hasErrors()) {
             return "/login";
@@ -55,7 +60,9 @@ public class AuthController {
                 Authentication authentication =
                         SecurityContextHolder.getContext().getAuthentication();
                 String redirectUrl = authService.determineRedirectUrl(authentication);
-
+                Users user = usersRepository.findByUsername(loginDTO.getUsername())
+                        .orElseThrow(() -> new RuntimeException("User  not found"));
+                session.setAttribute("userId", user.getId());
                 return "redirect:" + redirectUrl;
             } else {
                 redirectAttributes.addFlashAttribute(

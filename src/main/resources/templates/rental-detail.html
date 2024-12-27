@@ -1,44 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Chi Tiết Thuê Xe</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .status-badge {
+            font-size: 0.9rem;
+            padding: 0.4rem 0.6rem;
+        }
+    </style>
 </head>
-<body class="container mt-4">
-<h1 class="mb-4">Chi Tiết Thuê Xe</h1>
-
-<div class="card">
-    <div class="card-header bg-primary text-white">
-        Thông Tin Thuê Xe
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-6">
-                <h5>Thông Tin Khách Hàng</h5>
-                <p><strong>Tên:</strong> <span th:text="${rental.user.fullName}"></span></p>
-                <p><strong>Email:</strong> <span th:text="${rental.user.email}"></span></p>
-                <p><strong>Số Điện Thoại:</strong> <span th:text="${rental.user.phone}"></span></p>
-            </div>
-            <div class="col-md-6">
-                <h5>Thông Tin Xe</h5>
-                <p><strong>Tên Xe:</strong> <span th:text="${rental.vehicle.name}"></span></p>
-                <p><strong>Biển Số:</strong> <span th:text="${rental.vehicle.licensePlate}"></span></p>
-                <p><strong>Hãng Xe:</strong> <span th:text="${rental.vehicle.manufacturer}"></span>
-            </div>
-        </div>
-
-        <hr>
-
-        <div class="row">
-            <div class="col-md-6">
-                <h5>Chi Tiết Thuê</h5>
-                <p><strong>Ngày Bắt Đầu:</strong> <span th:text="${#dates.format(rental.rentalDate, 'dd/MM/yyyy')}"></span></p>
-                <p><strong>Ngày Kết Thúc:</strong> <span th:text="${#dates.format(rental.returnDate, 'dd/MM/yyyy')}"></span></p>
-                <p><strong>Tổng Chi Phí:</strong> <span th:text="${rental.deposit + ' VND'}"></span></p>
-            </div>
-            <div class="col-md-6">
-                <h5>Trạng Thái</h5>
-                <span th:switch="${rental.status}" class="badge fs-6">
+<body class="container-fluid bg-light">
+<div class="row justify-content-center my-4">
+    <div class="col-md-10 col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Chi Tiết Thuê Xe</h4>
+                <span th:switch="${rental.status}" class="badge status-badge">
                         <span th:case="'PENDING'" class="bg-warning text-dark">Chờ Duyệt</span>
                         <span th:case="'CONFIRMED'" class="bg-primary">Đã Xác Nhận</span>
                         <span th:case="'IN_PROGRESS'" class="bg-info">Đang Thuê</span>
@@ -46,28 +25,95 @@
                         <span th:case="'CANCELLED'" class="bg-danger">Đã Hủy</span>
                     </span>
             </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Thông Tin Khách Hàng</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-1"><strong>Tên:</strong> <span th:text="${rental.user.fullName}"></span></p>
+                                <p class="mb-1"><strong>Email:</strong> <span th:text="${rental.user.email}"></span></p>
+                                <p class="mb-0"><strong>Số Điện Thoại:</strong> <span th:text="${rental.user.phone}"></span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Thông Tin Xe</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-1"><strong>Tên Xe:</strong> <span th:text="${rental.vehicle.name}"></span></p>
+                                <p class="mb-1"><strong>Biển Số:</strong> <span th:text="${rental.vehicle.licensePlate}"></span></p>
+                                <p class="mb-0"><strong>Hãng Xe:</strong> <span th:text="${rental.vehicle.manufacturer}"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Chi Tiết Thuê</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-1"><strong>Ngày Bắt Đầu:</strong>
+                                    <span th:text="${#dates.format(rental.rentalDate, 'dd/MM/yyyy HH:mm')}"></span>
+                                </p>
+                                <p class="mb-1"><strong>Ngày Kết Thúc:</strong>
+                                    <span th:text="${#dates.format(rental.returnDate, 'dd/MM/yyyy HH:mm')}"></span>
+                                </p>
+                                <p class="mb-0"><strong>Tổng Chi Phí:</strong>
+                                    <span th:text="${#numbers.formatInteger(rental.deposit, 0, 'POINT')} + ' VND'"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Thao Tác</h5>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#updateRentalModal">
+                                    <i class="bi bi-pencil-square me-2"></i>Cập Nhật Trạng Thái
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer text-center">
+                <a href="/employee/rentals" class="btn btn-secondary me-2">
+                    <i class="bi bi-arrow-left me-2"></i>Quay Lại Danh Sách
+                </a>
+            </div>
         </div>
-    </div>
-    <div class="card-footer">
-        <a href="/employee/rentals" class="btn btn-secondary">Quay Lại Danh Sách</a>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateRentalModal">Cập Nhật Trạng Thái</button>
     </div>
 </div>
 
 <!-- Modal Cập Nhật Trạng Thái -->
 <div class="modal fade" id="updateRentalModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-light">
                 <h5 class="modal-title">Cập Nhật Trạng Thái Thuê Xe</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form th:action="@{/employee/rentals/{id}(id=${rental.rentalId})}" method="post">
+            <form th:action="@{/employee/rentals/{id}(id=${rental.rentalId})}" method="post" id="updateStatusForm">
                 <input type="hidden" name="_method" value="PUT"/>
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Chọn Trạng Thái Mới</label>
-                        <select name="status" class="form-select">
+                        <select name="status" class="form-select" required>
+                            <option value="">-- Chọn Trạng Thái --</option>
                             <option value="PENDING">Chờ Duyệt</option>
                             <option value="CONFIRMED">Đã Xác Nhận</option>
                             <option value="IN_PROGRESS">Đang Thuê</option>
@@ -86,5 +132,16 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('updateStatusForm').addEventListener('submit', function(e) {
+        const selectedStatus = this.querySelector('select[name="status"]').value;
+        if (!selectedStatus) {
+            e.preventDefault();
+            alert('Vui lòng chọn trạng thái');
+        } else if (!confirm('Bạn chắc chắn muốn cập nhật trạng thái?')) {
+            e.preventDefault();
+        }
+    });
+</script>
 </body>
 </html>

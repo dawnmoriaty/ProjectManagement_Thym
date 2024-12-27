@@ -12,45 +12,44 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow">
-                <div class="card-header bg-primary text-white d-flex align-items-center">
-                    <i class="bi bi-cart-plus me-2"></i>
-                    <h4 class="mb-0">Đặt Thuê Xe</h4>
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-calendar-check me-2"></i>Đặt Thuê Xe
+                    </h3>
+
                 </div>
                 <div class="card-body">
-                    <div class="text-center mb-4">
-                        <img th:src="@{${vehicle.imageVehicle}}"
-                             class="img-fluid rounded shadow-sm"
-                             style="max-height: 250px; object-fit: cover;"
-                             th:alt="${vehicle.name}">
-                        <h5 class="mt-3 fw-bold" th:text="${vehicle.name}">Tên Xe</h5>
-                        <p class="text-muted">
-                            <i class="bi bi-cash me-1"></i>
-                            <th:block th:text="${vehicle.price + ' VND/Ngày'}"></th:block>
-                        </p>
-                    </div>
-
                     <form th:action="@{/customer/rentals}" method="post">
-                        <input type="hidden" name="vehicleId" th:value="${vehicle.id}">
+                        <input type="hidden" name="vehicleId" th:value="${vehicleId}" />
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="startDate" class="form-label">Ngày Bắt Đầu</label>
-                                <input type="date" class="form-control" id="startDate"
-                                       name="startDate" required>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="endDate" class="form-label">Ngày Kết Thúc</label>
-                                <input type="date" class="form-control" id="endDate"
-                                       name="endDate" required>
-                            </div>
+                        <div class="mb-3">
+                            <label for="rentalDate" class="form-label">Ngày Thuê</label>
+                            <input type="date"
+                                   class="form-control"
+                                   id="rentalDate"
+                                   name="rentalDate"
+                                   required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="note" class="form-label">Ghi Chú (Tùy Chọn)</label>
-                            <textarea class="form-control" id="note"
-                                      name="note" rows="3"
-                                      placeholder="Nhập ghi chú nếu có"></textarea>
+                            <label for="returnDate" class="form-label">Ngày Trả</label>
+                            <input type="date"
+                                   class="form-control"
+                                   id="returnDate"
+                                   name="returnDate"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="depositAmount" class="form-label">Tiền Cọc</label>
+                            <div class="input-group">
+                                <span class="input-group-text">VND</span>
+                                <input type="number"
+                                       class="form-control"
+                                       id="depositAmount"
+                                       name="depositAmount"
+                                       required>
+                            </div>
                         </div>
 
                         <div class="d-grid gap-2">
@@ -72,15 +71,10 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const today = new Date().toISOString().split('T')[0];
-        const startDateInput = document.getElementById('startDate');
-        const endDateInput = document.getElementById('endDate');
+        document.getElementById('rentalDate').min = today;
 
-        startDateInput.value = today;
-        startDateInput.min = today;
-        endDateInput.min = today;
-
-        startDateInput.addEventListener('change', function() {
-            endDateInput.min = this.value;
+        document.getElementById('returnDate').addEventListener('change', function() {
+            this.min = document.getElementById('rentalDate').value;
         });
     });
 </script>

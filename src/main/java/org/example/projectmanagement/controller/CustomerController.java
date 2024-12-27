@@ -1,62 +1,57 @@
 package org.example.projectmanagement.controller;
-
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.example.projectmanagement.model.entity.Rentals;
-import org.example.projectmanagement.model.entity.Vehicles;
+import org.example.projectmanagement.model.dtos.request.RentalCalculationDTO;
 import org.example.projectmanagement.service.IRentalsService;
 import org.example.projectmanagement.service.IVehiclesService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/customer")
 @RequiredArgsConstructor
 public class CustomerController {
-    private final IVehiclesService vehiclesService; // Service để lấy thông tin xe
-    private final IRentalsService rentalsService; // Service để quản lý giao dịch thuê xe
-
+    private final IVehiclesService vehiclesService;
+    private final IRentalsService rentalsService;
     @GetMapping("/dashboard")
     public String customerHome() {
         return "customer-home"; // Redirect đến trang home của khách hàng
     }
-
+    // Hiển thị danh sách xe
     @GetMapping("/vehicles")
-    public String getAllVehicles(Model model) {
-        List<Vehicles> vehicles = vehiclesService.getAllVehicles(); // Lấy danh sách xe
-        model.addAttribute("vehicles", vehicles);
-        return "vehicles-user-list"; // Trả về template danh sách xe
-
+    public String getVehicles(Model model) {
+        model.addAttribute("vehicles", vehiclesService.getAllVehicles());
+        return "vehicles-user-list"; // Tên template hiển thị danh sách xe
     }
 
+    // Hiển thị chi tiết xe
     @GetMapping("/vehicles/{id}")
-    public String getVehicleById(@PathVariable Long id, Model model) {
-        Vehicles vehicle = vehiclesService.getVehicleById(id); // Lấy chi tiết xe
-        model.addAttribute("vehicle", vehicle);
-        return "vehicle-details"; // Trả về template chi tiết xe
+    public String getVehicleDetails(@PathVariable Long id, Model model) {
+        model.addAttribute("vehicle", vehiclesService.getVehicleById(id));
+        return "vehicle-details"; // Tên template hiển thị chi tiết xe
     }
 
+    // Hiển thị form thuê xe
     @GetMapping("/rentals/form/{id}")
     public String showRentalForm(@PathVariable Long id, Model model) {
-        Vehicles vehicle = vehiclesService.getVehicleById(id); // Lấy xe để hiển thị trong form
-        model.addAttribute("vehicle", vehicle);
-        return "rental-form"; // Trả về template form thuê xe
+        model.addAttribute("vehicleId", id);
+        model.addAttribute("rentalCalculationDTO", new RentalCalculationDTO());
+        return "rental-form"; // Tên template hiển thị form thuê xe
     }
 
+    // Xử lý tạo mới giao dịch thuê xe
     @PostMapping("/rentals")
-    public String createRental(@ModelAttribute Rentals rental) {
-        rentalsService.createRental(rental); // Tạo giao dịch thuê xe mới
-        return "redirect:/customer/rentals/history"; // Redirect đến lịch sử thuê xe
+    public String createRental(@ModelAttribute RentalCalculationDTO rentalCalculationDTO, Principal principal) {
+        rentalsService.createRental(rentalCalculationDTO, principal.getName());
+        return "redirect:/customer/rentals/history"; // Chuyển hướng đến lịch sử thuê xe
     }
 
+    // Hiển thị lịch sử thuê xe của người dùng
     @GetMapping("/rentals/history")
-    public String getRentalHistory(HttpSession session, Model model) {
-        Long userId = (Long) session.getAttribute("userId");
-        List<Rentals> rentalHistory = rentalsService.getAllRentalsByUser(userId);
-        model.addAttribute("rentalHistory", rentalHistory);
-        return "rental-history";
+    public String getRentalHistory(Model model, Principal principal) {
+        model.addAttribute("rentals", rentalsService.getAllRentalsByUser(principal.getName()));
+        return "rental-history"; // Tên template hiển thị lịch sử thuê xe
     }
 }
 

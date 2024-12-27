@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface IRentalsRepository extends JpaRepository<Rentals,Long> {
-    List<Rentals> findByUserId(Long userId);
-    List<Rentals> findByVehicleId(Long vehicleId);
+    List<Rentals> findAllByUser_Username(String username);
+    List<Rentals> findAllByVehicle_Id(Long vehicleId);
 }
