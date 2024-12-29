@@ -62,4 +62,5 @@ public class UserServiceImpl implements IUserService {
         user.getRoles().add(role);
         usersRepository.save(user);
     }
+
 }

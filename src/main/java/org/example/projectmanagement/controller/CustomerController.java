@@ -16,42 +16,33 @@ public class CustomerController {
     private final IRentalsService rentalsService;
     @GetMapping("/dashboard")
     public String customerHome() {
-        return "customer-home"; // Redirect đến trang home của khách hàng
+        return "customer-home";
     }
-    // Hiển thị danh sách xe
     @GetMapping("/vehicles")
     public String getVehicles(Model model) {
         model.addAttribute("vehicles", vehiclesService.getAllVehicles());
-        return "vehicles-user-list"; // Tên template hiển thị danh sách xe
+        return "vehicles-user-list";
     }
-
-    // Hiển thị chi tiết xe
     @GetMapping("/vehicles/{id}")
     public String getVehicleDetails(@PathVariable Long id, Model model) {
         model.addAttribute("vehicle", vehiclesService.getVehicleById(id));
-        return "vehicle-details"; // Tên template hiển thị chi tiết xe
+        return "vehicle-details";
     }
-
-    // Hiển thị form thuê xe
     @GetMapping("/rentals/form/{id}")
     public String showRentalForm(@PathVariable Long id, Model model) {
         model.addAttribute("vehicleId", id);
         model.addAttribute("rentalCalculationDTO", new RentalCalculationDTO());
-        return "rental-form"; // Tên template hiển thị form thuê xe
+        return "rental-form";
     }
-
-    // Xử lý tạo mới giao dịch thuê xe
     @PostMapping("/rentals")
     public String createRental(@ModelAttribute RentalCalculationDTO rentalCalculationDTO, Principal principal) {
         rentalsService.createRental(rentalCalculationDTO, principal.getName());
-        return "redirect:/customer/rentals/history"; // Chuyển hướng đến lịch sử thuê xe
+        return "redirect:/customer/rentals/history";
     }
-
-    // Hiển thị lịch sử thuê xe của người dùng
     @GetMapping("/rentals/history")
     public String getRentalHistory(Model model, Principal principal) {
         model.addAttribute("rentals", rentalsService.getAllRentalsByUser(principal.getName()));
-        return "rental-history"; // Tên template hiển thị lịch sử thuê xe
+        return "rental-history";
     }
 }
 

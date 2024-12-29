@@ -15,9 +15,23 @@
 </head>
 <body>
 <div class="container py-5">
-    <h1 class="text-center mb-4">
-        <i class="bi bi-clock-history me-2"></i>Lịch Sử Thuê Xe
-    </h1>
+    <div class="row mb-4 align-items-center">
+        <div class="col">
+            <a th:href="@{/customer/dashboard}" class="btn btn-secondary me-3">
+                <i class="bi bi-arrow-left me-2"></i>Quay Lại Trang Chủ
+            </a>
+            <h1 class="d-inline-block mb-0">
+                <i class="bi bi-clock-history me-2"></i>Lịch Sử Thuê Xe
+            </h1>
+        </div>
+        <div class="col-auto">
+            <form th:action="@{/auth/logout}" method="post">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-box-arrow-right me-1"></i>Đăng Xuất
+                </button>
+            </form>
+        </div>
+    </div>
 
     <!-- Danh sách thuê xe -->
     <div th:if="${not #lists.isEmpty(rentals)}">
@@ -40,11 +54,10 @@
                     <td class="text-center" th:text="${#dates.format(rental.rentalDate, 'dd/MM/yyyy')}">Ngày Thuê</td>
                     <td class="text-center" th:text="${#dates.format(rental.returnDate, 'dd/MM/yyyy')}">Ngày Trả</td>
                     <td class="text-center">
-                            <span class="badge status-badge"
-                                  th:classappend="${rental.status} == 'ongoing' ? 'bg-warning' : (${rental.status} == 'completed' ? 'bg-success' : 'bg-danger')">
-    <th:block th:text="${#strings.equalsIgnoreCase(rental.status, 'ongoing') ? 'Đang Thuê' : (#strings.equalsIgnoreCase(rental.status, 'completed') ? 'Hoàn Thành' : 'Khác')}"></th:block>
-</span>
-
+                        <span class="badge status-badge"
+                              th:classappend="${rental.status} == 'ongoing' ? 'bg-warning' : (${rental.status} == 'completed' ? 'bg-success' : 'bg-danger')">
+                            <th:block th:text="${#strings.equalsIgnoreCase(rental.status, 'ongoing') ? 'Đang Thuê' : (#strings.equalsIgnoreCase(rental.status, 'completed') ? 'Hoàn Thành' : 'Khác')}"></th:block>
+                        </span>
                     </td>
                     <td class="text-end"
                         th:text="${#numbers.formatInteger(rental.deposit, 3, 'POINT')} + ' VND'">

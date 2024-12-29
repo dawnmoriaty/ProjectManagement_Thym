@@ -5,14 +5,12 @@ import org.example.projectmanagement.model.entity.Categories;
 import org.example.projectmanagement.model.entity.Rentals;
 import org.example.projectmanagement.model.entity.Vehicles;
 import org.example.projectmanagement.repository.ICategoriesRepository;
-import org.example.projectmanagement.repository.IRentalsRepository;
 import org.example.projectmanagement.service.ICategoriesService;
 import org.example.projectmanagement.service.IRentalsService;
 import org.example.projectmanagement.service.IVehiclesService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 @Controller
 @RequestMapping("/admin")
@@ -27,7 +25,7 @@ public class AdminController {
     // =============================DASHBOARD==================================
     @GetMapping("/dashboard")
     public String dashboard() {
-        return "dashboard-admin"; // Tên view cho dashboard
+        return "dashboard-admin";
     }
 
     // =============================CATEGORIES==================================
@@ -35,38 +33,38 @@ public class AdminController {
     public String listCategories(Model model) {
         List<Categories> categoriesList = categoriesService.getAllCategories();
         model.addAttribute("categories", categoriesList);
-        return "categories-list"; // Tên view cho danh sách danh mục
+        return "categories-list";
     }
 
     @GetMapping("/categories/new")
     public String createCategoryForm(Model model) {
         model.addAttribute("category", new Categories());
-        return "category-form"; // Tên view cho form tạo mới danh mục
+        return "category-form";
     }
 
     @PostMapping("/categories")
     public String createCategory(@ModelAttribute Categories category) {
         categoriesService.createCategory(category);
-        return "redirect:/admin/categories"; // Chuyển hướng về danh sách danh mục
+        return "redirect:/admin/categories";
     }
 
     @GetMapping("/categories/edit/{id}")
     public String editCategoryForm(@PathVariable Long id, Model model) {
         Categories category = categoriesService.getCategoryById(id);
         model.addAttribute("category", category);
-        return "category-form"; // Tên view cho form chỉnh sửa danh mục
+        return "category-form";
     }
 
     @PostMapping("/categories/update/{id}")
     public String updateCategory(@PathVariable Long id, @ModelAttribute Categories categoryDetails) {
         categoriesService.updateCategory(id, categoryDetails);
-        return "redirect:/admin/categories"; // Chuyển hướng về danh sách danh mục
+        return "redirect:/admin/categories";
     }
 
     @GetMapping("/categories/delete/{id}")
     public String deleteCategory(@PathVariable Long id) {
         categoriesService.deleteCategory(id);
-        return "redirect:/admin/categories"; // Chuyển hướng về danh sách danh mục
+        return "redirect:/admin/categories";
     }
     // =============================VEHICLES==================================
     @GetMapping("/vehicles")
@@ -95,8 +93,8 @@ public class AdminController {
     @GetMapping("/vehicles/new")
     public String createVehicleForm(Model model) {
         model.addAttribute("vehicles", new VehicleRequestDTO());
-        model.addAttribute("categories", categoriesService.getAllCategories()); // Thêm danh sách danh mục cho dropdown
-        return "vehicles-form"; // Tên view cho form tạo mới xe
+        model.addAttribute("categories", categoriesService.getAllCategories());
+        return "vehicles-form";
     }
 
     @PostMapping("/vehicles")
@@ -111,7 +109,7 @@ public class AdminController {
         Vehicles vehicle = vehiclesService.getVehicleById(id);
         model.addAttribute("vehicles", vehicle);
         List<Categories> categoriesList = categoriesRepository.findAll();
-        model.addAttribute("categories", categoriesList); // Thêm danh sách danh mục cho dropdown
+        model.addAttribute("categories", categoriesList);
         return "vehicle-update";
     }
 

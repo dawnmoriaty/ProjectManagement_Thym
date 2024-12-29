@@ -45,7 +45,7 @@ public class SuperAdminController {
             return "register";
         }
         try {
-            userService.registerUser (requestDTO);
+            userService.registerUser(requestDTO);
             redirectAttributes.addFlashAttribute("success", "Đăng ký người dùng thành công!");
             return "redirect:/super-admin/users";
         } catch (Exception e) {
@@ -75,4 +75,5 @@ public class SuperAdminController {
         }
         return "redirect:/super-admin/users";
     }
+
 }

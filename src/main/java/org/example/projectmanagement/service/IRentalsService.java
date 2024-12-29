@@ -1,9 +1,6 @@
 package org.example.projectmanagement.service;
-
 import org.example.projectmanagement.model.dtos.request.RentalCalculationDTO;
 import org.example.projectmanagement.model.entity.Rentals;
-
-import java.util.Date;
 import java.util.List;
 
 public interface IRentalsService {
